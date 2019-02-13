@@ -8,7 +8,7 @@ def analyze_students(data: typing.Dict) -> typing.Set:
 
 def validate_data(data: typing.Dict) -> bool:
     for name in data:
-        if type(name) != str:
+        if not isinstance(name, str):
             raise TypeError
 
         for letter in name:
@@ -18,7 +18,7 @@ def validate_data(data: typing.Dict) -> bool:
                 raise ValueError
 
         for subject in data[name]:
-            if type(subject) != str:
+            if not isinstance(subject, str):
                 raise TypeError
 
             for symbol in subject:
@@ -29,7 +29,7 @@ def validate_data(data: typing.Dict) -> bool:
                     raise ValueError
 
             for mark in data[name][subject]:
-                if type(mark) != int:
+                if not isinstance(mark, int):
                     raise TypeError
                 elif mark > 10 or mark < 1:
                     raise ValueError
