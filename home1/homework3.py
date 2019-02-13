@@ -1,23 +1,23 @@
 class FibIterator:
     def __init__(self):
-        self.a = 0
-        self.b = 1
+        self.digit_1 = 0
+        self.digit_2 = 1
         self.count = 0
 
     def __iter__(self):
         while True:
-            yield self.a
-            self.a, self.b = self.b, self.a + self.b
+            yield self.digit_1
+            self.digit_1, self.digit_2 = self.digit_2, self.digit_1 + self.digit_2
             self.count += 1
             if self.count == 100:
                 break
 
 
 def fib_generator():
-    a, b = 0, 1
-    for i in range(100):
-        yield a
-        a, b = b, a + b
+    digit_1, digit_2 = 0, 1
+    for count in range(100):
+        yield digit_1
+        digit_1, digit_2 = digit_2, digit_1 + digit_2
 
 
 def strange_decorator(func):
