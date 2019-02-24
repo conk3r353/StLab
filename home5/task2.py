@@ -22,6 +22,3 @@ def get_weather():
             city_weather = int(city_weather)
         result[city[1]] = city_weather
     return result
-
-
-print(get_weather())
