@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask site</title>
+</head>
+<body>
+    <form method="post">
+        <button type="submit" name="action" value="update">Обновить валюты</button>
+        <p><h3>Введите количество валюты:</h3></p>
+        <p><input type="text" id="amount" name="amount" value="{{ amount }}"></p>
+        <p><button type="button" id="swap" name="action" value="reverse">Наоборот</button></p>
+        <p><h3>Выберите нужную валюту:</h3></p>
+        <select name="currency" id="select">
+            <option selected="selected" disabled="disabled">Выберите валюту</option>
+            {% for key, value in data.items() %}
+                {% if key == currency %}
+                    <option value="{{ key }}" selected="selected">{{ value }}</option>
+                {% else %}
+                    <option value="{{ key }}">{{ value }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        {% if not reverse %}
+            <p><button type="submit" id="convert" name="action" value="convert">Конвертировать</button>
+        {% else %}
+            <p><button type="submit" id="convert" name="action" value="convert-reverse">Конвертировать</button>
+        {% endif %}
+        <button type="button" id="clear">Очистить</button></p>
+    </form>
+    {% if result %}
+        <p>Результат конвертирования: {{ result }}</p>
+    {% endif %}
+</body>
+<script>
+    let reverse = {{ reverse }};
+    function reverse_convert(swap) {
+        if (swap) {
+            document.getElementById('convert').setAttribute('value', 'convert-reverse');
+        } else {
+            document.getElementById('convert').setAttribute('value', 'convert');
+        }
+    }
+    document.getElementById('swap').onclick = function () {
+        reverse = !reverse;
+        reverse_convert(reverse);
+    };
+    document.getElementById('clear').onclick = function () {
+        document.getElementById('amount').value = '';
+        document.getElementById('select').value = 'Выберите валюту';
+    };
+</script>
+</html>

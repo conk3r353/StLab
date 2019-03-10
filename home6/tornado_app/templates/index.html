@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tornado app</title>
+</head>
+<body>
+    <form method="post">
+        <p>Введите свое имя:</p>
+        <input type="text" name="name" value="{{ name }}"><br>
+        {% if error %}
+            <p style="color: red">{{ error }}</p><br>
+        {% end %}
+        <p>Введите номер комнаты от 1 до 10:</p>
+        <input type="text" name="room" value="{{ room }}"><br>
+        <p><button type="submit">Далее</button></p>
+    </form>
+</body>
+</html>

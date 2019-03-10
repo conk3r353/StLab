@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Админка</title>
+</head>
+<body>
+    <form method="post">
+        <p>Выберите комнату от 1 до 10:</p>
+        <input type="text" name="room">
+        <p><button type="submit" name="clear">Очистить</button>
+        <button type="submit" name="kick">Перезагрузить</button></p>
+        {% if result %}
+            <p>{{ result }}</p>
+        {% end %}
+    </form>
+</body>
+</html>

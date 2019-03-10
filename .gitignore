@@ -1,0 +1,6 @@
+home6/flask_app/.idea/*
+home6/flask_app/__pycache__/*
+home6/flask_app/venv/*
+home6/tornado_app/.idea/*
+home6/tornado_app/__pycache__/*
+home6/tornado_app/venv/*
