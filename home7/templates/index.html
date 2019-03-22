@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Магазины</title>
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        <label for="shop">Выберите магазин:</label>
+        <select id="shop" name="shop">
+            {% for shop in shops %}
+                <option value="{{ shop.id }}">
+                    {{ shop.name }}
+                </option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <button type="submit">Открыть</button>
+    </form>
+</body>
+</html>

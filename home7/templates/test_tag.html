@@ -1,0 +1,92 @@
+{% load get_leader %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Проверка тега</title>
+</head>
+<body>
+    <table border=2>
+        <tr>
+            <td>Поля сравнения</td>
+            <td>{{ department_1.sphere|upper }}</td>
+            <td>{{ department_2.sphere|upper }}</td>
+        </tr>
+        {% for item in compared_fields %}
+            {% get_leader department_1 department_2 item as lead %}
+            {% if item == '1' %}
+            <tr>
+                <td>Количество работников</td>
+                <td {% if lead.value_1 == lead.result %}
+                    bgcolor="#7fff00"
+                {% endif %}>{{ lead.value_1 }}</td>
+                <td {% if lead.value_2 == lead.result %}
+                    bgcolor="#7fff00"
+                {% endif %}>{{ lead.value_2 }}</td>
+            </tr>
+            {% elif item == '2' %}
+                <tr>
+                    <td>Сумма проданных товаров</td>
+                    <td {% if lead.value_1 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_1 }}</td>
+                    <td {% if lead.value_2 == lead.result %}
+                         bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_2 }}</td>
+                </tr>
+            {% elif item == '3' %}
+                <tr>
+                    <td>Сумма непроданных товаров</td>
+                    <td {% if lead.value_1 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_1 }}</td>
+                    <td {% if lead.value_2 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_2 }}</td>
+                </tr>
+            {% elif item == '4' %}
+                <tr>
+                    <td>Суммарная стоимость товаров</td>
+                    <td {% if lead.value_1 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_1 }}</td>
+                    <td {% if lead.value_2 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_2 }}</td>
+                </tr>
+            {% elif item == '5' %}
+                <tr>
+                    <td>Количество проданных товаров</td>
+                    <td {% if lead.value_1 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_1 }}</td>
+                    <td {% if lead.value_2 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_2 }}</td>
+                </tr>
+            {% elif item == '6' %}
+                <tr>
+                    <td>Количество непроданных товаров</td>
+                    <td {% if lead.value_1 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_1 }}</td>
+                    <td {% if lead.value_2 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_2 }}</td>
+                </tr>
+            {% elif item == '7' %}
+                <tr>
+                    <td>Суммарное количество товаров</td>
+                    <td {% if lead.value_1 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_1 }}</td>
+                    <td {% if lead.value_2 == lead.result %}
+                        bgcolor="#7fff00"
+                    {% endif %}>{{ lead.value_2 }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</body>
+</html>
