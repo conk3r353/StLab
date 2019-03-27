@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Магазин {{ shop.id }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Магазин {{ shop.id }}{% endblock %}
+{% block content %}
     <table border=2>
         <tr>
             <td>Название магазина</td>
@@ -19,5 +16,4 @@
     </table>
     <br>
     <a href="{% url 'new-department' shop.id %}">Создать департамент</a><br>
-</body>
-</html>
+{% endblock %}

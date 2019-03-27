@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Фильтр магазинов</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Фильтр магазинов{% endblock %}
+
+{% block content %}
     <table border=2>
         <tr>
             <td>Название</td>
@@ -30,6 +28,4 @@
         {% endfor %}
     </table>
     <br>
-
-</body>
-</html>
+{% endblock %}

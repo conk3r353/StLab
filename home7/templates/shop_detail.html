@@ -1,17 +1,15 @@
+{% extends 'base.html' %}
 {% load shop_urlify %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Магазин {{ shop.name }}</title>
-</head>
-<body>
-    <h3><a href="{{ shop|shop_urlify }}">{{ shop.name }}</a></h3>
+
+{% block title %}Магазин {{ shop.name }}{% endblock %}
+
+{% block content %}
+    <h3><a href="{{ shop|shop_urlify }}">{{ shop.name }}</a></h3><br>
     {% if shop.address %}
         {{ shop.address }}
     {% endif %}
-    <a href="{% url 'new-department' shop.id %}">Создать департамент</a>
+    <a href="{% url 'new-department' shop.id %}">Создать департамент</a><br>
     <br>
     <h3>Департаменты</h3>
     {% for department in shop.departments.all %}
@@ -57,5 +55,5 @@
         <br>
         <br>
     {% endfor %}
-</body>
-</html>
+
+{% endblock %}

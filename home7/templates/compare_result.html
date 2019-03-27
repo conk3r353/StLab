@@ -1,89 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Сравнение департаментов</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+
+{% block title %}Сравнение департаментов{% endblock %}
+
+{% block content %}
     <table border=2>
         <tr>
             <td>Поля сравнения</td>
             <td>{{ department_1.sphere|upper }}</td>
             <td>{{ department_2.sphere|upper }}</td>
         </tr>
-        {% for item in compared_fields.keys %}
-            {% if item == 'workers_total' %}
-                <tr>
-                    <td>Количество работников</td>
-                    <td {% if compared_fields.workers_total.0 > compared_fields.workers_total.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.workers_total.0 }}</td>
-                    <td {% if compared_fields.workers_total.0 < compared_fields.workers_total.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.workers_total.1 }}</td>
-                </tr>
-            {% elif item == 'price_sold' %}
-                <tr>
-                    <td>Сумма проданных товаров</td>
-                    <td {% if compared_fields.price_sold.0 > compared_fields.price_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.price_sold.0 }}</td>
-                    <td {% if compared_fields.price_sold.0 < compared_fields.price_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.price_sold.1 }}</td>
-                </tr>
-            {% elif item == 'price_not_sold' %}
-                <tr>
-                    <td>Сумма непроданных товаров</td>
-                    <td {% if compared_fields.price_not_sold.0 > compared_fields.price_not_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.price_not_sold.0 }}</td>
-                    <td {% if compared_fields.price_not_sold.0 < compared_fields.price_not_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.price_not_sold.1 }}</td>
-                </tr>
-            {% elif item == 'price_total' %}
-                <tr>
-                    <td>Суммарная стоимость товаров</td>
-                    <td {% if compared_fields.price_total.0 > compared_fields.price_total.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.price_total.0 }}</td>
-                    <td {% if compared_fields.price_total.0 < compared_fields.price_total.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.price_total.1 }}</td>
-                </tr>
-            {% elif item == 'amount_sold' %}
-                <tr>
-                    <td>Количество проданных товаров</td>
-                    <td {% if compared_fields.amount_sold.0 > compared_fields.amount_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.amount_sold.0 }}</td>
-                    <td {% if compared_fields.amount_sold.0 < compared_fields.amount_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.amount_sold.1 }}</td>
-                </tr>
-            {% elif item == 'amount_not_sold' %}
-                <tr>
-                    <td>Количество непроданных товаров</td>
-                    <td {% if compared_fields.amount_not_sold.0 > compared_fields.amount_not_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.amount_not_sold.0 }}</td>
-                    <td {% if compared_fields.amount_not_sold.0 < compared_fields.amount_not_sold.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.amount_not_sold.1 }}</td>
-                </tr>
-            {% elif item == 'amount_total' %}
-                <tr>
-                    <td>Суммарное количество товаров</td>
-                    <td {% if compared_fields.amount_total.0 > compared_fields.amount_total.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.amount_total.0 }}</td>
-                    <td {% if compared_fields.amount_total.0 < compared_fields.amount_total.1 %}
-                            bgcolor="#7fff00"
-                        {% endif %}>{{ compared_fields.amount_total.1 }}</td>
-                </tr>
-            {% endif %}
+        {% for item in compared_fields %}
+            <tr>
+                <td>{{ item.2 }}</td>
+                <td {% if item.0 > item.1 %}
+                    bgcolor="#7fff00"
+                {% endif %}>{{ item.0 }}</td>
+                <td {% if item.0 < item.1 %}
+                    bgcolor="#7fff00"
+                {% endif %}>{{ item.1 }}</td>
+            </tr>
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}

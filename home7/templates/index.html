@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Магазины</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Магазины{% endblock %}
+
+{% block content %}
     <form method="post">
         {% csrf_token %}
         <label for="shop">Выберите магазин:</label>
@@ -18,5 +16,4 @@
         <br><br>
         <button type="submit">Открыть</button>
     </form>
-</body>
-</html>
+{% endblock %}

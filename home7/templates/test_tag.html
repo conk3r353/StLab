@@ -1,12 +1,10 @@
+{% extends 'base.html' %}
 {% load get_leader %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Проверка тега</title>
-</head>
-<body>
+
+{% block title %}Проверка тега{% endblock %}
+
+{% block content %}
     <table border=2>
         <tr>
             <td>Поля сравнения</td>
@@ -88,5 +86,4 @@
             {% endif %}
         {% endfor %}
     </table>
-</body>
-</html>
+{% endblock %}

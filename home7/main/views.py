@@ -7,6 +7,7 @@ from django.views.generic.edit import UpdateView, DeleteView, CreateView, FormVi
 
 from main.models import Shop, Department, Item
 from main.forms import CompareRequestForm
+from main.comparison import comparison
 
 
 class ShopView(views.View):
@@ -163,59 +164,13 @@ class CompareRequestView(FormView):
     def form_valid(self, form):
         department_1 = Department.objects.get(id=int(form.cleaned_data['department_1']))
         department_2 = Department.objects.get(id=int(form.cleaned_data['department_2']))
-        context = {'department_1': department_1, 'department_2': department_2, 'compared_fields': dict()}
-        for compare_point in form.cleaned_data['compared_fields']:
-            if compare_point == '1':
-                amount_1 = department_1.staff_amount
-                amount_2 = department_2.staff_amount
+        context = {'department_1': department_1, 'department_2': department_2, 'compared_fields': list()}
 
-                context['compared_fields']['workers_total'] = [amount_1, amount_2]
-
-            if compare_point == '2':
-                sum_1 = Item.objects.filter(department_id=department_1.id,
-                                            is_sold=True).aggregate(Sum('price'))['price__sum']
-                sum_2 = Item.objects.filter(department_id=department_2.id,
-                                            is_sold=True).aggregate(Sum('price'))['price__sum']
-
-                context['compared_fields']['price_sold'] = [sum_1, sum_2]
-
-            if compare_point == '3':
-                sum_1 = Item.objects.filter(department_id=department_1.id,
-                                            is_sold=False).aggregate(Sum('price'))['price__sum']
-                sum_2 = Item.objects.filter(department_id=department_2.id,
-                                            is_sold=False).aggregate(Sum('price'))['price__sum']
-
-                context['compared_fields']['price_not_sold'] = [sum_1, sum_2]
-
-            if compare_point == '4':
-                sum_1 = Item.objects.filter(department_id=department_1.id).aggregate(Sum('price'))['price__sum']
-                sum_2 = Item.objects.filter(department_id=department_2.id).aggregate(Sum('price'))['price__sum']
-
-                context['compared_fields']['price_total'] = [sum_1, sum_2]
-
-            if compare_point == '5':
-                count_1 = Item.objects.filter(department_id=department_1.id,
-                                              is_sold=True).aggregate(Count('id'))['id__count']
-                count_2 = Item.objects.filter(department_id=department_2.id,
-                                              is_sold=True).aggregate(Count('id'))['id__count']
-
-                context['compared_fields']['amount_sold'] = [count_1, count_2]
-
-            if compare_point == '6':
-                count_1 = Item.objects.filter(department_id=department_1.id,
-                                              is_sold=False).aggregate(Count('id'))['id__count']
-                count_2 = Item.objects.filter(department_id=department_2.id,
-                                              is_sold=False).aggregate(Count('id'))['id__count']
-
-                context['compared_fields']['amount_not_sold'] = [count_1, count_2]
-
-            if compare_point == '7':
-                count_1 = Item.objects.filter(department_id=department_1.id).aggregate(Count('id'))['id__count']
-                count_2 = Item.objects.filter(department_id=department_2.id).aggregate(Count('id'))['id__count']
-
-                context['compared_fields']['amount_total'] = [count_1, count_2]
-
-        return render(self.request, 'compare_result.html', context=context)
+        return render(
+            self.request,
+            'compare_result.html',
+            context=comparison(form, department_1, department_2, context)
+        )
 
     def form_invalid(self, form):
         return super().form_invalid(form)
@@ -239,3 +194,8 @@ class TestTagView(FormView):
 
     def form_invalid(self, form):
         return super().form_invalid(form)
+
+
+class ZeroItemsView(views.View):
+    def get(self, request, **kwargs):
+        return render(request, 'panic.html')

@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Редактирование товара {{ object.id }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Редактирование товара {{ object.id }}{% endblock %}
+
+{% block content %}
     {% include 'form.html' with button_label='Завершить' %}
-</body>
-</html>
+{% endblock %}

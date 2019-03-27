@@ -34,4 +34,5 @@ urlpatterns = [
     path('filter/shop/<int:number>', views.ShopFilterView.as_view(), name='filter-shop'),
     path('compare-request', views.CompareRequestView.as_view(), name='compare-request'),
     path('test-tag', views.TestTagView.as_view(), name='test-tag'),
+    path('zero-items', views.ZeroItemsView.as_view(), name='zero-items')
 ]

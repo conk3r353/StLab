@@ -1,14 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Удаление {{ object }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Удаление {{ object }}{% endblock %}
+
+{% block content %}
     Точно удалить?
     <form method="post">
         {% csrf_token %}
         <button type="submit" value="confirm">Удалить</button>
     </form>
-</body>
-</html>
+{% endblock %}

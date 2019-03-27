@@ -54,3 +54,14 @@ class Item(models.Model):
     department = models.ForeignKey(
         Department, on_delete=models.CASCADE, verbose_name='Департамент', related_name='items'
     )
+
+
+class Statistics(models.Model):
+    def __str__(self):
+        return f'Статистика по {self.url}'
+
+    def __repr__(self):
+        return str(self)
+
+    url = models.URLField(verbose_name='Ссылка')
+    amount = models.IntegerField(verbose_name='Количество посещений')
