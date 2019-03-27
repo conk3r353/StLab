@@ -1,19 +1,21 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import Form, CheckboxSelectMultiple
+
 from main.models import Department
+from main.constants import *
 
 
 class CompareRequestForm(Form):
     choice_select = [(department.id, department.sphere) for department in Department.objects.all()]
     choice_checkbox = (
-        (1, 'Количество сотрудников в отделе'),
-        (2, 'Суммарная стоимость проданных товаров'),
-        (3, 'Суммарная стоимость не проданных товаров'),
-        (4, 'Суммарная стоимость всех товаров'),
-        (5, 'Количество проданных товаров'),
-        (6, 'Количество не проданных товаров'),
-        (7, 'Количество всех товаров')
+        (WORKERS_TOTAL, WORKERS_TOTAL_LABEL),
+        (PRICE_SOLD, PRICE_SOLD_LABEL),
+        (PRICE_NOT_SOLD, PRICE_NOT_SOLD_LABEL),
+        (PRICE_TOTAL, PRICE_TOTAL_LABEL),
+        (AMOUNT_SOLD, AMOUNT_SOLD_LABEL),
+        (AMOUNT_NOT_SOLD, AMOUNT_NOT_SOLD_LABEL),
+        (AMOUNT_TOTAL, AMOUNT_TOTAL_LABEL)
     )
 
     department_1 = forms.ChoiceField(choices=choice_select, label='Первый департамент')
