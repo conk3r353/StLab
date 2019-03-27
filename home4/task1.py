@@ -12,31 +12,31 @@ class SQLManager:
     def create_tables(self):
 
         self.curr.execute("""
-        create table if not exists Shops(
-          id int primary key,
-          name varchar,
-          address varchar null,
+        CREATE TABLE IF NOT EXISTS Shops(
+          id INT PRIMARY KEY,
+          name VARCHAR,
+          address VARCHAR NULL,
           staff_amount int)
         """)
 
         self.curr.execute("""
-        create table if not exists Departments(
-          id int primary key,
-          sphere varchar,
-          staff_amount int,
-          shop_id int,
-          foreign key (shop_id) references Shops (id) 
+        CREATE TABLE IF NOT EXISTS Departments(
+          id INT PRIMARY KEY,
+          sphere VARCHAR,
+          staff_amount INT,
+          shop_id INT,
+          FOREIGN KEY (shop_id) REFERENCES Shops (id) 
         )
         """)
 
         self.curr.execute("""
-        create table if not exists Items(
-          id int primary key,
-          name varchar,
-          description text null,
-          price int,
-          department_id int,
-          foreign key (department_id) references Departments (id)
+        CREATE TABLE IF NOT EXISTS Items(
+          id INT PRIMARY KEY,
+          name VARCHAR,
+          description TEXT NULL,
+          price INT,
+          department_id INT,
+          FOREIGN KEY (department_id) REFERENCES Departments (id)
         )
         """)
 
@@ -45,174 +45,174 @@ class SQLManager:
     def insert_data(self):
 
         self.curr.execute("""
-        insert into shops values
-          (1, 'Auchan', null, 250),
+        INSERT INTO shops VALUES 
+          (1, 'Auchan', NULL, 250),
           (2, 'IKEA', 'Street Žirnių g. 56, Vilnius, Lithuania.', 500);
         """)
 
         self.curr.execute("""
-        insert into departments values 
+        INSERT INTO departments VALUES 
           (1, 'Furniture', 250, 1),
           (2, 'Furniture', 300, 2),
           (3, 'Dishes', 200, 2)
         """)
 
         self.curr.execute("""
-        insert into items values 
+        INSERT INTO items VALUES 
           (1, 'Table', 'Cheap wooden table', 300, 1),
-          (2, 'Table', null, 750, 2),
+          (2, 'Table', NULL, 750, 2),
           (3, 'Bed', 'Amazing wooden bed', 1200, 2),
-          (4, 'Cup', null, 10, 3),
+          (4, 'Cup', NULL, 10, 3),
           (5, 'Plate', 'Glass plate', 20, 3)
         """)
         self.conn.commit()
 
     def update_data(self):
         self.curr.execute("""
-        update items 
-        set price = price + 100
-        where name ilike 'b%' or name ilike '%e'
+        UPDATE items 
+        SET price = price + 100
+        WHERE name ILIKE 'b%' OR name ILIKE '%e'
         """)
         self.conn.commit()
 
     def select_data(self, task):
         if task == 1:
-            self.curr.execute("select * from items where description is not null")
+            self.curr.execute("SELECT * from items where description is not null")
             return self.curr.fetchall()
 
         elif task == 2:
-            self.curr.execute("select distinct sphere from departments where staff_amount > 200")
+            self.curr.execute("SELECT DISTINCT sphere FROM departments WHERE staff_amount > 200")
             return [item[0] for item in self.curr.fetchall()]
 
         elif task == 3:
-            self.curr.execute("select address from shops where name ilike 'i%'")
+            self.curr.execute("SELECT address FROM shops WHERE name ILIKE 'i%'")
             return [item[0] for item in self.curr.fetchall()]
 
         elif task == 4:
             self.curr.execute("""
-             select i.name
-             from items i join departments d on i.department_id = d.id 
-             where d.sphere = 'Furniture'
+             SELECT i.name
+             FROM items i JOIN departments d ON i.department_id = d.id 
+             WHERE d.sphere = 'Furniture'
              """)
             return [item[0] for item in self.curr.fetchall()]
 
         elif task == 5:
             self.curr.execute("""
-            select name
-            from shops
-            where id in 
-              (select distinct d.id from departments d join items i on d.id = i.department_id
-               where i.name is not null)
+            SELECT name
+            FROM shops
+            WHERE id IN 
+              (SELECT DISTINCT d.id FROM departments d JOIN items i ON d.id = i.department_id
+               WHERE i.name IS NOT NULL)
             """)
             return [item[0] for item in self.curr.fetchall()]
 
         elif task == 6:
             self.curr.execute("""
-            select i.name, i.description, i.price,
-              concat('department_id ', i.department_id), concat('department_sphere ', d.sphere),
-              concat('department_staff_amount ', d.staff_amount), concat('department_shop_id ', d.shop_id),
-              concat('shop_name ', s.name), concat('shop_address ', s.address),
-              concat('shop_staff_amount ', s.staff_amount)
-            from (items i join departments d on i.department_id = d.id) join shops s on d.shop_id = s.id
+            SELECT i.name, i.description, i.price,
+              CONCAT('department_id ', i.department_id), CONCAT('department_sphere ', d.sphere),
+              CONCAT('department_staff_amount ', d.staff_amount), CONCAT('department_shop_id ', d.shop_id),
+              CONCAT('shop_name ', s.name), CONCAT('shop_address ', s.address),
+              CONCAT('shop_staff_amount ', s.staff_amount)
+            FROM (items i JOIN departments d ON i.department_id = d.id) JOIN shops s ON d.shop_id = s.id
             """)
             return self.curr.fetchall()
 
         elif task == 7:
             self.curr.execute("""
-            select id
-            from items
-            order by name
-            offset 2 limit 2
+            SELECT id
+            FROM items
+            ORDER BY name
+            OFFSET 2 LIMIT 2
             """)
             return [item[0] for item in self.curr.fetchall()]
 
         elif task == 8:
             self.curr.execute("""
-            select i.name, d.sphere
-            from items i inner join departments d on i.department_id = d.id
+            SELECT i.name, d.sphere
+            FROM items i INNER JOIN departments d ON i.department_id = d.id
             """)
             return self.curr.fetchall()
 
         elif task == 9:
             self.curr.execute("""
-            select i.name, d.sphere
-            from items i left join departments d on i.department_id = d.id
+            SELECT i.name, d.sphere
+            FROM items i LEFT JOIN departments d ON i.department_id = d.id
             """)
             return self.curr.fetchall()
 
         elif task == 10:
             self.curr.execute("""
-            select i.name, d.sphere
-            from items i right join departments d on i.department_id = d.id
+            SELECT i.name, d.sphere
+            FROM items i RIGHT JOIN departments d ON i.department_id = d.id
             """)
             return self.curr.fetchall()
 
         elif task == 11:
             self.curr.execute("""
-            select i.name, d.sphere
-            from items i full join departments d on i.department_id = d.id
+            SELECT i.name, d.sphere
+            FROM items i FULL JOIN departments d ON i.department_id = d.id
             """)
             return self.curr.fetchall()
 
         elif task == 12:
             self.curr.execute("""
-            select i.name, d.sphere
-            from items i cross join departments d
+            SELECT i.name, d.sphere
+            FROM items i CROSS JOIN departments d
             """)
             return self.curr.fetchall()
 
         elif task == 13:
             self.curr.execute("""
-            select count(i.id), sum(i.price), max(i.price), min(i.price), avg(i.price)
-            from (items i join departments d on i.department_id = d.id) join shops s on d.shop_id = s.id
-            having count(i.name) > 1
+            SELECT COUNT(i.id), SUM(i.price), MAX(i.price), MIN(i.price), AVG(i.price)
+            FROM (items i JOIN departments d ON i.department_id = d.id) JOIN shops s ON d.shop_id = s.id
+            HAVING COUNT(i.name) > 1
             """)
             return self.curr.fetchall()
 
         elif task == 14:
             self.curr.execute("""
-            select s.name, array_agg(i.name)
-            from (items i join departments d on i.department_id = d.id) join shops s on d.shop_id = s.id
-            group by s.name
+            SELECT s.name, ARRAY_AGG(i.name)
+            FROM (items i JOIN departments d ON i.department_id = d.id) JOIN shops s ON d.shop_id = s.id
+            GROUP BY s.name
             """)
             return self.curr.fetchall()
 
     def delete_data(self, task):
         if task == 1:
             self.curr.execute("""
-            delete from items
-            where price > 500 and description is null
+            DELETE FROM items
+            WHERE price > 500 AND description IS NULL
             """)
             self.conn.commit()
 
         elif task == 2:
             self.curr.execute("""
-            delete from items
-            where department_id = (
-              select d.id 
-              from departments d join shops s on d.shop_id = s.id
-              where s.address is null )
+            DELETE FROM items
+            WHERE department_id = (
+              SELECT d.id 
+              FROM departments d JOIN shops s ON d.shop_id = s.id
+              WHERE s.address IS NULL)
             """)
             self.conn.commit()
 
         elif task == 3:
             self.curr.execute("""
-            delete from items
-            where id in (
-              select id
-              from departments
-              where staff_amount < 225 or staff_amount > 275)
+            DELETE FROM items
+            WHERE id IN (
+              SELECT id
+              FROM departments
+              WHERE staff_amount < 225 or staff_amount > 275)
             """)
             self.conn.commit()
 
         elif task == 4:
-            self.curr.execute("delete from items")
-            self.curr.execute("delete from departments")
-            self.curr.execute("delete from shops")
+            self.curr.execute("DELETE FROM items")
+            self.curr.execute("DELETE FROM departments")
+            self.curr.execute("DELETE FROM shops")
             self.conn.commit()
 
     def drop_tables(self):
-        self.curr.execute("drop table items")
-        self.curr.execute("drop table departments")
-        self.curr.execute("drop table shops")
+        self.curr.execute("DROP TABLE items")
+        self.curr.execute("DROP TABLE departments")
+        self.curr.execute("DROP TABLE shops")
         self.conn.commit()
