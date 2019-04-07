@@ -4,4 +4,8 @@ home6/flask_app/venv/*
 home6/tornado_app/.idea/*
 home6/tornado_app/__pycache__/*
 home6/tornado_app/venv/*
-home7/home7/.idea/*
+home7/.idea/*
+home8/.idea/*
+home8/__pycache__/*
+home8/venv/*
+
