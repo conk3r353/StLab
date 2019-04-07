@@ -4,16 +4,15 @@ import json
 
 
 def get_rates():
-    with open('rates.json', 'w') as rates:
-        currencies = dict()
-        for item in requests.get('http://www.nbrb.by/API/ExRates/Currencies').json():
-            abbreviation = item['Cur_Abbreviation']
-            name = item['Cur_Name']
-            currencies[abbreviation] = name
-        json.dump(currencies, rates, indent=4, ensure_ascii=False)
+    currencies = dict()
+    for item in requests.get('http://www.nbrb.by/API/ExRates/Currencies').json():
+        abbreviation = item['Cur_Abbreviation']
+        name = item['Cur_Name']
+        currencies[abbreviation] = name
+        with open('rates.json', 'w') as rates:
+            json.dump(currencies, rates, indent=4, ensure_ascii=False)
 
 
-get_rates()
 app = Flask(__name__)
 
 
@@ -54,4 +53,5 @@ def index():
 
 
 if __name__ == '__main__':
+	get_rates()
     app.run()
