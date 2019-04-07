@@ -8,4 +8,6 @@ home7/.idea/*
 home8/.idea/*
 home8/__pycache__/*
 home8/venv/*
+home8/home7_rest/__pycache__/*
+home8/main/__pycache__/*
 
