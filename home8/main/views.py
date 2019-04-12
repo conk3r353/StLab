@@ -1,17 +1,17 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from main.models import Item, Shop, Department
 from main.permissions import SuperUser, IsAdminOrReadOnly, IsSuperOrReadOnly
-from main.serializers import SuperUserSerializers, StaffSerializers, NamedUserSerializers, UserSerializers, \
-    AnonymousSerializer
+from main.serializers import ItemSerializer, DepartmentSerializer, ShopSerializer, UserSerializer
 
 
 class ItemViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrReadOnly, )
+    serializer_class = ItemSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -20,22 +20,22 @@ class ItemViewSet(viewsets.ModelViewSet):
         else:
             return Item.objects.filter(is_sold=False).order_by('id')
 
-    def get_serializer_class(self):
-        if self.request.user.is_anonymous:
-            return AnonymousSerializer
-        elif self.request.user.is_superuser:
-            return SuperUserSerializers.ItemSerializer
-        elif self.request.user.is_staff:
-            return StaffSerializers.ItemSerializer
-        elif self.request.user.first_name and self.request.user.last_name:
-            return NamedUserSerializers.ItemSerializer
-        else:
-            return UserSerializers.ItemSerializer
+    def get_serializer(self, *args, **kwargs):
+        user = self.request.user
+        if user.is_anonymous:
+            kwargs['fields_to_leave'] = ['name', 'description']
+        elif user.is_staff:
+            kwargs['fields_to_leave'] = ['name', 'description', 'price', 'is_sold', 'comments', 'department']
+        elif not user.first_name or not user.last_name:
+            kwargs['fields_to_leave'] = ['id', 'name', 'description', 'is_sold', 'comments', 'department']
+        kwargs['context'] = {'request': self.request}
+        return self.get_serializer_class()(*args, **kwargs)
 
 
 class DepartmentViewSet(viewsets.ModelViewSet):
     queryset = Department.objects.order_by('id')
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
+    serializer_class = DepartmentSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -44,20 +44,20 @@ class DepartmentViewSet(viewsets.ModelViewSet):
         else:
             return Department.objects.filter(items__is_sold=False).distinct().order_by('id')
 
-    def get_serializer_class(self):
-        if self.request.user.is_superuser:
-            return SuperUserSerializers.DepartmentSerializer
-        elif self.request.user.is_staff:
-            return StaffSerializers.DepartmentSerializer
-        elif self.request.user.first_name and self.request.user.last_name:
-            return NamedUserSerializers.DepartmentSerializer
-        else:
-            return UserSerializers.DepartmentSerializer
+    def get_serializer(self, *args, **kwargs):
+        user = self.request.user
+        if user.is_staff:
+            kwargs['fields_to_leave'] = ['sphere', 'staff_amount', 'shop']
+        elif not user.first_name or not user.last_name:
+            kwargs['fields_to_leave'] = ['id', 'name', 'description', 'is_sold', 'comments', 'department']
+        kwargs['context'] = {'request': self.request}
+        return self.get_serializer_class()(*args, **kwargs)
 
 
 class ShopViewSet(viewsets.ModelViewSet):
     queryset = Shop.objects.order_by('id')
     permission_classes = (IsAdminOrReadOnly, IsAuthenticated)
+    serializer_class = ShopSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -66,33 +66,27 @@ class ShopViewSet(viewsets.ModelViewSet):
         else:
             return Shop.objects.filter(departments__items__is_sold=False).distinct().order_by('id')
 
-    def get_serializer_class(self):
-        if self.request.user.is_superuser:
-            return SuperUserSerializers.ShopSerializer
-        elif self.request.user.is_staff:
-            return StaffSerializers.ShopSerializer
-        elif self.request.user.first_name and self.request.user.last_name:
-            return NamedUserSerializers.ShopSerializer
-        else:
-            return UserSerializers.ShopSerializer
+    def get_serializer(self, *args, **kwargs):
+        user = self.request.user
+        if user.is_staff:
+            kwargs['fields_to_leave'] = ['name', 'address', 'staff_amount']
+        elif not user.first_name or not user.last_name:
+            kwargs['fields_to_leave'] = ['id', 'name', 'address']
+        kwargs['context'] = {'request': self.request}
+        return self.get_serializer_class()(*args, **kwargs)
 
 
 @action(methods=['delete'], detail=False, permission_classes=(SuperUser, ))
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsSuperOrReadOnly, )
     queryset = User.objects.order_by('id')
-
-    def get_serializer_class(self):
-        if self.request.user.is_superuser:
-            return SuperUserSerializers.UserSerializer
-        else:
-            return StaffSerializers.UserSerializer
+    serializer_class = UserSerializer
 
 
 class UnsoldItemsViewSet(viewsets.ModelViewSet):
     permission_classes = (SuperUser, )
     queryset = Item.objects.filter(is_sold=False)
-    serializer_class = SuperUserSerializers.ItemSerializer
+    serializer_class = ItemSerializer
 
     def delete(self, request):
         objects = self.queryset

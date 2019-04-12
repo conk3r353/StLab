@@ -1,5 +1,4 @@
 from rest_framework import permissions
-from rest_framework.request import Request
 
 
 class SuperUser(permissions.BasePermission):
@@ -22,3 +21,4 @@ class IsSuperOrReadOnly(permissions.BasePermission):
             return request.user.is_superuser
         else:
             return False
+
